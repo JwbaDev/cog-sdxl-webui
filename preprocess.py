@@ -478,6 +478,7 @@ def load_and_save_masks_and_captions(
         seg_masks = face_mask_google_mediapipe(images=images)
 
     # find the center of mass of the mask
+    print(f"Find the center of mass of the mask...")
     if crop_based_on_salience:
         coms = [_center_of_mass(mask) for mask in seg_masks]
     else:
@@ -489,7 +490,14 @@ def load_and_save_masks_and_captions(
 
     print(f"Upscaling {len(images)} images...")
     # upscale images anyways
-    images = swin_ir_sr(images, target_size=(target_size, target_size))
+    # images = swin_ir_sr(images, target_size=(target_size, target_size))
+    
+    # Upscale only images that are smaller than the target size
+    # images = [
+    #     swin_ir_sr(image, target_size=(target_size, target_size)) if image.size[0] < target_size or image.size[1] < target_size else image
+    #     for image in images
+    # ]
+    
     images = [
         image.resize((target_size, target_size), Image.Resampling.LANCZOS)
         for image in images

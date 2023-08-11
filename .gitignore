@@ -7,6 +7,7 @@ temp
 temp_in
 cache
 .cog
+*.zip
 __pycache__
 wandb
 ft*

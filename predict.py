@@ -68,7 +68,7 @@ def download_weights(url, dest):
 
 class Predictor(BasePredictor):
     def load_trained_weights(self, weights, pipe):
-        local_weights_cache = "./trained-model"
+        local_weights_cache = "./training_out"
         if not os.path.exists(local_weights_cache):
             # pget -x doesn't like replicate.delivery
             weights = str(weights)
@@ -313,7 +313,7 @@ class Predictor(BasePredictor):
         ),
         apply_watermark: bool = Input(
             description="Applies a watermark to enable determining if an image is generated in downstream applications. If you have other provisions for generating or deploying images safely, you can use this to disable watermarking.",
-            default=True,
+            default=False,
         ),
         lora_scale: float = Input(
             description="LoRA additive scale. Only applicable on trained models.",
@@ -356,8 +356,8 @@ class Predictor(BasePredictor):
         elif refine == "base_image_refiner":
             sdxl_kwargs["output_type"] = "latent"
 
-        if not apply_watermark:
-            # toggles watermark for this prediction
+        if apply_watermark:
+            print('toggles watermark for this prediction...')
             watermark_cache = pipe.watermark
             pipe.watermark = None
             self.refiner.watermark = None
@@ -390,7 +390,8 @@ class Predictor(BasePredictor):
 
             output = self.refiner(**common_args, **refiner_kwargs)
 
-        if not apply_watermark:
+        if apply_watermark:
+            print('Toggles watermark for this refiner prediction...')
             pipe.watermark = watermark_cache
             self.refiner.watermark = watermark_cache
 
@@ -398,16 +399,16 @@ class Predictor(BasePredictor):
 
         output_paths = []
         for i, nsfw in enumerate(has_nsfw_content):
-            if nsfw:
-                print(f"NSFW content detected in image {i}")
-                continue
+            # if nsfw:
+            #     print(f"NSFW content detected in image {i}")
+            #     continue
             output_path = f"/tmp/out-{i}.png"
             output.images[i].save(output_path)
             output_paths.append(Path(output_path))
 
-        if len(output_paths) == 0:
-            raise Exception(
-                f"NSFW content detected. Try running it again, or try a different prompt."
-            )
+        # if len(output_paths) == 0:
+        #     raise Exception(
+        #         f"NSFW content detected. Try running it again, or try a different prompt."
+        #     )
 
         return output_paths
