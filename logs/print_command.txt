@@ -1,0 +1,5 @@
+cog train -i "input_images=@False" -i use_face_detection_instead=/home/bernard/github/cog-sdxl/1_ana_de_armas_woman.zip
+cog train -i "input_images=@False" -i use_face_detection_instead=True
+cog train -i "input_images=@False" --debug -i use_face_detection_instead=True
+cog train -i "input_images=@/home/bernard/github/cog-sdxl/1_ana_de_armas_woman.zip" -i use_face_detection_instead=True
+cog train -i "input_images=@/home/bernard/github/cog-sdxl/1_ana_de_armas_woman.zip" --debug

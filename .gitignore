@@ -20,3 +20,9 @@ training_out*
 trained_model.tar
 checkpoint*
 weights
+setup.log
+last_*.json
+# Python
+venv
+__pycache__
+*.egg-info

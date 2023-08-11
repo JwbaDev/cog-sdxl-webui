@@ -26,3 +26,15 @@ cog train -i input_images=@example_datasets/zeke.zip" -i use_face_detection_inst
 * Default to 768x768 resolution training
 * Rank as argument now, default to 32
 * Now uses Swin2SR `caidas/swin2SR-realworld-sr-x4-64-bsrgan-psnr` as default, and will upscale + downscale to 768x768
+
+## Windows Installation
+
+Docker Desktop
+Configure WSL2
+Install cuda 11.8
+
+```
+python3 -m venv venv
+. ./venv/bin/activate
+pip install -r requirements.txt
+```
