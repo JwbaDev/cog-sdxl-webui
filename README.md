@@ -2,6 +2,8 @@
 
 This is a WEBUI for the implementation of the [SDXL](https://github.com/Stability-AI/generative-models) as a Cog model. [Cog packages machine learning models as standard containers](https://github.com/replicate/cog).
 
+<img src="images/webui.png" alt="WEBUI image" width="400"/>
+
 ## Basic Usage
 
 for prediction,
