@@ -4,8 +4,7 @@ The Cog-SDXL-WEBUI serves as a WEBUI for the implementation of the [SDXL](https:
 
 <img src="images/webui.png" alt="WEBUI image" width="400"/>
 
-## How to Use
-
+## Quickstart
 ### Generating Images
 #### ComfyUI
 
@@ -15,7 +14,7 @@ You can use of [ComfyUI](https://github.com/comfyanonymous/ComfyUI) with the fol
 
 Put the lora in the comfy lora folder. Them put the embeding.pti in the embedings folder and make use of them as shown in the comfy image above.
 
-### Training the Model
+### Training a quick Model
 
 1. Load the `./example_datasets/zeke.json` sample Configuration File through the WEBUI.
 2. Review the configuration parameters.
@@ -66,7 +65,7 @@ To launch the webui, execute:
 ./webui.sh --inbrowser
 ```
 
-# Training With Your Dataset
+## Training With Your Dataset
 
 - Place 5 to 8 high-resolution images in the root of a zip file.
 - Specify the zip file in the `Image file` field.
