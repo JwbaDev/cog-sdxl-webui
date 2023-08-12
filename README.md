@@ -36,6 +36,13 @@ sudo chmod +x /usr/local/bin/cog
 git clone https://github.com/bmaltais/cog-sdxl-webui.git
 cd cog-sdxl-webui
 cog run ls
+```
+
+This last command will start the docker image build process. This can take a long time. Be patient.
+
+Finally, run the following command:
+
+```bash
 ./setup.sh
 ```
 
@@ -50,9 +57,16 @@ cog run ls
 ```bash
 sudo curl -o /usr/local/bin/cog -L "https://github.com/replicate/cog/releases/latest/download/cog_$(uname -s)_$(uname -m)"
 sudo chmod +x /usr/local/bin/cog
-cog run ls
 git clone https://github.com/bmaltais/cog-sdxl-webui.git
 cd cog-sdxl-webui
+cog run ls
+```
+
+This last command will start the docker image build process. This can take a long time. Be patient.
+
+Finally, run the following command:
+
+```bash
 ./setup.sh
 ```
 
