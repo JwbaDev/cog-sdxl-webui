@@ -23,7 +23,23 @@ You can follow this guide: https://github.com/replicate/cog/blob/main/docs/wsl2/
 Essentially:
 - Download and install Docker Desktop
 - Configure WSL2
-- Install cuda 11.8
+
+Once the above is done:
+
+```
+sudo curl -o /usr/local/bin/cog -L "https://github.com/replicate/cog/releases/latest/download/cog_$(uname -s)_$(uname -m)"
+sudo chmod +x /usr/local/bin/cog
+cog run ls
+
+git clone https://github.com/bmaltais/cog-sdxl-webui.git
+cd cog-sdxl-webui
+./setup.sh
+```
+
+## Linux Installation
+
+Essentially:
+- Install docker
 
 Once the above is done:
 
