@@ -28,6 +28,10 @@ Essentially:
 Once the above is done:
 
 ```
+sudo curl -o /usr/local/bin/cog -L "https://github.com/replicate/cog/releases/latest/download/cog_$(uname -s)_$(uname -m)"
+sudo chmod +x /usr/local/bin/cog
+cog run ls
+
 git clone https://github.com/bmaltais/cog-sdxl-webui.git
 cd cog-sdxl-webui
 ./setup.sh
