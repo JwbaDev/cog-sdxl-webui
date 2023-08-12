@@ -1,7 +1,6 @@
 import os
 import shutil
 import tarfile
-import zipfile
 
 from cog import BaseModel, Input, Path
 
@@ -119,6 +118,11 @@ def train(
         description="When should training should pivot from TI to LoRA/ Default is midway (0.5)",
         default=0.5,
     ),
+    input_images_filetype: str = Input(
+        description="Filetype of the input images. Can be either `zip` or `tar`. By default its `infer`, and it will be inferred from the ext of input file.",
+        default="infer",
+        choices=["zip", "tar", "infer"],
+    ),
 ) -> TrainingOutput:
     # Hard-code token_map for now. Make it configurable once we support multiple concepts or user-uploaded caption csv.
     token_map = token_string + ":2"
@@ -140,6 +144,7 @@ def train(
         running_tok_cnt += n_tok
 
     input_dir = preprocess(
+        input_images_filetype=input_images_filetype,
         input_zip_path=input_images,
         caption_text=caption_prefix,
         mask_target_prompts=mask_target_prompts,
