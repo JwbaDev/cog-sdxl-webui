@@ -1,49 +1,17 @@
-# v1: initial release
-# v2: add open and save folder icons
-# v3: Add new Utilities tab for Dreambooth folder preparation
-# v3.1: Adding captionning of images to utilities
-
 import gradio as gr
 import json
-import math
 import os
-import subprocess
-import psutil
-import pathlib
 import argparse
-from datetime import datetime
 from library.common_gui import (
     get_file_path,
-    get_any_file_path,
     get_saveasfile_path,
-    color_aug_changed,
-    save_inference_file,
-    run_cmd_advanced_training,
-    run_cmd_training,
     update_my_data,
-    check_if_model_exist,
     output_message,
-    verify_image_folder_pattern,
     SaveConfigFile,
     save_to_file,
-    check_duplicate_filenames
 )
 from library.class_configuration_file import ConfigurationFile
-# from library.class_source_model import SourceModel
-from library.class_basic_training import BasicTraining
-from library.class_advanced_training import AdvancedTraining
-from library.class_sdxl_parameters import SDXLParameters
-from library.class_folders import Folders
 from library.class_command_executor import CommandExecutor
-from library.tensorboard_gui import (
-    gradio_tensorboard,
-    start_tensorboard,
-    stop_tensorboard,
-)
-from library.utilities import utilities_tab
-from library.class_sample_images import SampleImages, run_cmd_sample
-from library.class_lora_tab import LoRATools
-
 from library.custom_logging import setup_logging
 
 # Set up logging
@@ -218,7 +186,7 @@ def train_model(
     verbose,
 ):
     # Get list of function parameters and values
-    parameters = list(locals().items())
+    # parameters = list(locals().items())
     global command_running
     
     print_only_bool = True if print_only.get('label') == 'True' else False
@@ -277,8 +245,6 @@ def train_model(
     if debug:
         run_cmd += f' --debug'
     
-    
-    
 
     if print_only_bool:
         log.warning(
@@ -288,19 +254,12 @@ def train_model(
         
         save_to_file(run_cmd)
     else:
-        # Saving config file for model
-        current_datetime = datetime.now()
-        formatted_datetime = current_datetime.strftime("%Y%m%d-%H%M%S")
         log.info(run_cmd)
         # Run the command
         executor.execute_command(run_cmd=run_cmd)
 
 
 def lora_tab(
-    train_data_dir_input=gr.Textbox(),
-    reg_data_dir_input=gr.Textbox(),
-    output_dir_input=gr.Textbox(),
-    logging_dir_input=gr.Textbox(),
     headless=False,
 ):
     dummy_db_true = gr.Label(value=True, visible=False)
@@ -315,8 +274,19 @@ def lora_tab(
         # Setup Configuration Files Gradio
         config = ConfigurationFile(headless)
 
-        with gr.Tab('Folders'):
-            folders = Folders(headless=headless)
+        with gr.Row():
+            input_images = gr.Textbox(
+                label='Image folder',
+                placeholder='Folder where the training folders containing the images are located',
+            )
+            input_images_folder = gr.Button(
+                '📂', elem_id='open_folder_small', visible=(not headless)
+            )
+            input_images_folder.click(
+                get_file_path,
+                outputs=input_images,
+                show_progress=False,
+            )
             
         with gr.Tab('Parameters'):
             def list_presets(path):
@@ -462,27 +432,13 @@ def lora_tab(
 
         button_print = gr.Button('Print training command')
 
-        # Setup gradio tensorboard buttons
-        button_start_tensorboard, button_stop_tensorboard = gradio_tensorboard()
-
-        button_start_tensorboard.click(
-            start_tensorboard,
-            inputs=folders.logging_dir,
-            show_progress=False,
-        )
-
-        button_stop_tensorboard.click(
-            stop_tensorboard,
-            show_progress=False,
-        )
-
         settings_list = [
             caption_prefix,
             checkpointing_steps,
             clipseg_temperature,
             crop_based_on_salience,
             debug,
-            folders.train_data_dir,
+            input_images,
             is_lora,
             lora_lr,
             lora_rank,
@@ -561,25 +517,6 @@ def lora_tab(
             inputs=[dummy_headless] + [dummy_db_true] + settings_list,
             show_progress=False,
         )
-        
-    # with gr.Tab('Tools'):
-    #     lora_tools = LoRATools(folders=folders, headless=headless)
-        
-    # with gr.Tab('Guides'):
-    #     gr.Markdown(
-    #         'This section provide Various LoRA guides and information...'
-    #     )
-    #     # if os.path.exists('./docs/LoRA/top_level.md'):
-    #     #     with open(os.path.join('./docs/LoRA/top_level.md'), 'r', encoding='utf8') as file:
-    #     #         guides_top_level = file.read() + '\n'
-    #     # gr.Markdown(guides_top_level)
-
-    return (
-        folders.train_data_dir,
-        folders.reg_data_dir,
-        folders.output_dir,
-        folders.logging_dir,
-    )
 
 
 def UI(**kwargs):
@@ -602,21 +539,7 @@ def UI(**kwargs):
 
             with interface:
                 with gr.Tab('COG LoRA Trainer'):
-                    (
-                        train_data_dir_input,
-                        reg_data_dir_input,
-                        output_dir_input,
-                        logging_dir_input,
-                    ) = lora_tab(headless=headless)
-                # with gr.Tab('Utilities'):
-                #     utilities_tab(
-                #         train_data_dir_input=train_data_dir_input,
-                #         reg_data_dir_input=reg_data_dir_input,
-                #         output_dir_input=output_dir_input,
-                #         logging_dir_input=logging_dir_input,
-                #         enable_copy_info_button=True,
-                #         headless=headless,
-                #     )
+                    lora_tab(headless=headless)
 
             # Show the interface
             launch_kwargs = {}
@@ -640,11 +563,14 @@ def UI(**kwargs):
             interface.launch(**launch_kwargs)
     except KeyboardInterrupt:
         # Code to execute when Ctrl+C is pressed
-        print("You pressed Ctrl+C!")
-    
+        print("You pressed Ctrl+C, stopping training!")
+        executor.kill_command
+        user_input = input("Do you want to quit? (yes/no, default is yes): ").strip().lower()
+        if user_input == 'yes' or user_input == '':
+            print("Exiting the program.")
+            exit()
 
 if __name__ == '__main__':
-    # torch.cuda.set_per_process_memory_fraction(0.48)
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '--listen',
