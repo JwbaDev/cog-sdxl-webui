@@ -24,11 +24,10 @@ Look in the training_out folder. Put the `lora.safetensors` file in the comfy lo
 
 ### Windows
 
-Follow this guide: [Windows Installation Guide](https://github.com/bmaltais/cog-sdxl-webui/wiki/Using-cog-on-Windows-11-with-WSL-2)
-
 #### Steps:
 
-1. Run the following commands:
+1. Follow this guide: [Windows Installation Guide](https://github.com/bmaltais/cog-sdxl-webui/wiki/Using-cog-on-Windows-11-with-WSL-2)
+2. Run the following commands in WSL 2:
 
 ```bash
 sudo curl -o /usr/local/bin/cog -L "https://github.com/replicate/cog/releases/latest/download/cog_$(uname -s)_$(uname -m)"
@@ -47,11 +46,14 @@ Finally, run the following command:
 ```
 
 ### Linux
+#### Prerequisite
+
+Make sure to use Ubuntu 22.04 or adapt the installation to your distro
 
 #### Steps:
 
 1. Install Docker.
-2. Install cuda drivers.
+2. Install 11.8.0 cuda drivers from: https://developer.nvidia.com/cuda-toolkit-archive
 3. Run the following commands:
 
 ```bash
