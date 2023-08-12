@@ -26,7 +26,7 @@ Look in the training_out folder. Put the `lora.safetensors` file in the comfy lo
 
 #### Steps:
 
-1. Follow this guide: [Windows Installation Guide](https://github.com/bmaltais/cog-sdxl-webui/wiki/Using-cog-on-Windows-11-with-WSL-2)
+1. Follow this guide: [Windows WSL2 Installation Guide](https://github.com/bmaltais/cog-sdxl-webui/wiki/Using-cog-on-Windows-11-with-WSL-2)
 2. Run the following commands in WSL 2:
 
 ```bash
@@ -42,6 +42,7 @@ This last command will start the docker image build process. This can take a lon
 Finally, run the following command:
 
 ```bash
+sudo apt update -y && sudo apt install -y python3-tk 
 ./setup.sh
 ```
 
@@ -69,6 +70,7 @@ This last command will start the docker image build process. This can take a lon
 Finally, run the following command:
 
 ```bash
+sudo apt update -y && sudo apt install -y python3-tk 
 ./setup.sh
 ```
 
