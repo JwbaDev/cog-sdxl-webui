@@ -361,17 +361,17 @@ def lora_tab(
                 unet_learning_rate = gr.Number(
                     label='UNet learning rate', value=1e-6,
                     info='Learning rate for the U-Net. We recommend this value to be somewhere between `1e-6` to `1e-5`.',
-                    minimum=1e-8, maximum=1
+                    minimum=0, maximum=1
                 )
                 ti_lr = gr.Number(
                     label='TI learning rate', value=3e-4,
                     info='Scaling of learning rate for training textual inversion embeddings. Don\'t alter unless you know what you\'re doing.',
-                    minimum=1e-8, maximum=1
+                    minimum=0, maximum=1
                 )
                 lora_lr = gr.Number(
                     label='LoRA learning rate', value=1e-4,
                     info='Scaling of learning rate for training LoRA embeddings. Don\'t alter unless you know what you\'re doing.',
-                    minimum=1e-8, maximum=1
+                    minimum=0, maximum=1
                 )
             with gr.Row():
                 lora_rank = gr.Slider(
