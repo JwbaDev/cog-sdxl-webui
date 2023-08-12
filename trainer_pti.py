@@ -263,7 +263,7 @@ def main(
     for epoch in range(first_epoch, num_train_epochs):
         if pivot_halfway:
             if epoch == math.ceil(num_train_epochs * pivot_ratio):
-                print("# PTI :  Pivot training to LoRA")
+                print("# PTI :  Pivot training from TI + UNet to UNet only")
                 # remove text encoder parameters from optimizer
                 params_to_optimize = params_to_optimize[:1]
                 optimizer = torch.optim.AdamW(
