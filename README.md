@@ -1,77 +1,79 @@
-# Cog-SDXL-WEBUI
+# Cog-SDXL-WEBUI Overview
 
-This is a WEBUI for the implementation of the [SDXL](https://github.com/Stability-AI/generative-models) as a Cog model. [Cog packages machine learning models as standard containers](https://github.com/replicate/cog).
+The Cog-SDXL-WEBUI serves as a WEBUI for the implementation of the [SDXL](https://github.com/Stability-AI/generative-models) as a Cog model. You can find details about [Cog's packaging of machine learning models as standard containers](https://github.com/replicate/cog-sdxl) here.
 
 <img src="images/webui.png" alt="WEBUI image" width="400"/>
 
-## Basic Usage
+## How to Use
 
-for prediction,
+### Generating Images
+
+Run the following command:
 
 ```bash
 cog predict -i prompt="a photo of TOK"
 ```
 
-for training,
+### Training the Model
 
-Use the WEBUI to load the `./example_datasets/zeke.json` sample Configuration File.
+1. Load the `./example_datasets/zeke.json` sample Configuration File through the WEBUI.
+2. Review the configuration parameters.
+3. Click the `Start training` button when ready.
 
-Look at the configuration parameters. When ready, click the `Start training` button.
+## Installation Guide
 
-## Windows Installation
+### Windows
 
-You can follow this guide: https://github.com/replicate/cog/blob/main/docs/wsl2/wsl2.md
+Follow this guide: [Windows Installation Guide](https://github.com/replicate/cog/blob/main/docs/wsl2/wsl2.md)
 
-Essentially:
-- Download and install Docker Desktop
-- Configure WSL2
+#### Steps:
 
-Once the above is done:
+1. Download and install Docker Desktop.
+2. Configure WSL2.
+3. Run the following commands:
 
-```
+```bash
 sudo curl -o /usr/local/bin/cog -L "https://github.com/replicate/cog/releases/latest/download/cog_$(uname -s)_$(uname -m)"
 sudo chmod +x /usr/local/bin/cog
 cog run ls
-
 git clone https://github.com/bmaltais/cog-sdxl-webui.git
 cd cog-sdxl-webui
 ./setup.sh
 ```
 
-## Linux Installation
+### Linux
 
-Essentially:
-- Install docker
+#### Steps:
 
-Once the above is done:
+1. Install Docker.
+2. Run the following commands:
 
-```
+```bash
 sudo curl -o /usr/local/bin/cog -L "https://github.com/replicate/cog/releases/latest/download/cog_$(uname -s)_$(uname -m)"
 sudo chmod +x /usr/local/bin/cog
 cog run ls
-
 git clone https://github.com/bmaltais/cog-sdxl-webui.git
 cd cog-sdxl-webui
 ./setup.sh
 ```
 
-## Run the Cog WEBUI
+## Running the Cog WEBUI
 
-To run the webui, simply do:
+To launch the webui, execute:
 
-```
+```bash
 ./webui.sh --inbrowser
-
 ```
 
-# Training on your dataset
+# Training With Your Dataset
 
-- Put your images (about 5 to 8 high resolution images) in the root of a zip file.
-- Point to the zip file in the `Image file` field.
-- Configure things as you like
-- Train
+- Place 5 to 8 high-resolution images in the root of a zip file.
+- Specify the zip file in the `Image file` field.
+- Adjust settings as needed.
+- Start the training process.
 
-## Update notes
+## Update Notes
 
-- 2023-08-11
-* 1st release of Minimum Viable Product for training WEBUI.
+### 2023-08-11
+
+- Initial release of Minimum Viable Product for training WEBUI.
