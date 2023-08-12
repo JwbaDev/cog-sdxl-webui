@@ -62,6 +62,13 @@ To run the webui, simply do:
 
 ```
 
+# Training on your dataset
+
+- Put your images (about 5 to 8 high resolution images) in the root of a zip file.
+- Point to the zip file in the `Image file` field.
+- Configure things as you like
+- Train
+
 ## Update notes
 
 - 2023-08-11

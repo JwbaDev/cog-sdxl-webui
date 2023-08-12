@@ -276,8 +276,8 @@ def lora_tab(
 
         with gr.Row():
             input_images = gr.Textbox(
-                label='Image folder',
-                placeholder='Folder where the training folders containing the images are located',
+                label='Image zip file',
+                placeholder='Path to zip file where the training images are located',
             )
             input_images_folder = gr.Button(
                 '📂', elem_id='open_folder_small', visible=(not headless)
