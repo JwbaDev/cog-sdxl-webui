@@ -1,12 +1,6 @@
-# Cog-SDXL
+# Cog-SDXL-WEBUI
 
-[![Replicate demo and cloud API](https://replicate.com/stability-ai/sdxl/badge)](https://replicate.com/stability-ai/sdxl)
-
-This is an implementation of the [SDXL](https://github.com/Stability-AI/generative-models) as a Cog model. [Cog packages machine learning models as standard containers](https://github.com/replicate/cog).
-
-## Development
-
-Follow the [model pushing guide](https://replicate.com/docs/guides/push-a-model) to push your own fork of SDXL to [Replicate](https://replicate.com).
+This is a WEBUI for the implementation of the [SDXL](https://github.com/Stability-AI/generative-models) as a Cog model. [Cog packages machine learning models as standard containers](https://github.com/replicate/cog).
 
 ## Basic Usage
 
@@ -16,25 +10,39 @@ for prediction,
 cog predict -i prompt="a photo of TOK"
 ```
 
-```bash
-cog train -i input_images=@example_datasets/zeke.zip" -i use_face_detection_instead=True
+for training,
+
+Use the WEBUI to load the `./example_datasets/zeke.json` sample Configuration File.
+
+Look at the configuration parameters. When ready, click the `Start training` button.
+
+## Windows Installation
+
+You can follow this guide: https://github.com/replicate/cog/blob/main/docs/wsl2/wsl2.md
+
+Essentially:
+- Download and install Docker Desktop
+- Configure WSL2
+- Install cuda 11.8
+
+Once the above is done:
+
+```
+git clone https://github.com/bmaltais/cog-sdxl-webui.git
+cd cog-sdxl-webui
+./setup.sh
+```
+
+## Run the Cog WEBUI
+
+To run the webui, simply do:
+
+```
+./webui.sh --inbrowser
+
 ```
 
 ## Update notes
 
 - 2023-08-11
-* Default to 768x768 resolution training
-* Rank as argument now, default to 32
-* Now uses Swin2SR `caidas/swin2SR-realworld-sr-x4-64-bsrgan-psnr` as default, and will upscale + downscale to 768x768
-
-## Windows Installation
-
-Docker Desktop
-Configure WSL2
-Install cuda 11.8
-
-```
-python3 -m venv venv
-. ./venv/bin/activate
-pip install -r requirements.txt
-```
+* 1st release of Minimum Viable Product for training WEBUI.

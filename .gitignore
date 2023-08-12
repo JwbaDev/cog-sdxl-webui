@@ -26,3 +26,4 @@ last_*.json
 venv
 __pycache__
 *.egg-info
+*.log

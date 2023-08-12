@@ -5,7 +5,7 @@ from .common_gui import remove_doublequote
 class ConfigurationFile:
     def __init__(self, headless=False):
         self.headless = headless
-        with gr.Accordion('Configuration file', open=False):
+        with gr.Accordion('Configuration file', open=True):
             with gr.Row():
                 self.button_open_config = gr.Button(
                     'Open 📂', elem_id='open_folder', visible=(not self.headless)

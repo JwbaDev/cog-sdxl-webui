@@ -20,8 +20,8 @@ def main_menu(platform_requirements_file, show_stdout: bool = False, no_run_acce
     # Upgrade pip if needed
     setup_common.install('--upgrade pip')
     setup_common.install_requirements(platform_requirements_file, check_no_verify_flag=False, show_stdout=show_stdout)
-    if not no_run_accelerate:
-        setup_common.configure_accelerate(run_accelerate=False)
+    # if not no_run_accelerate:
+    #     setup_common.configure_accelerate(run_accelerate=False)
 
 
 if __name__ == '__main__':
@@ -29,7 +29,7 @@ if __name__ == '__main__':
     setup_common.setup_logging()
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--platform-requirements-file', dest='platform_requirements_file', default='requirements_linux.txt', help='Path to the platform-specific requirements file')
+    parser.add_argument('--platform-requirements-file', dest='platform_requirements_file', default='requirements.txt', help='Path to the platform-specific requirements file')
     parser.add_argument('--show_stdout', dest='show_stdout', action='store_true', help='Whether to show stdout during installation')
     parser.add_argument('--no_run_accelerate', dest='no_run_accelerate', action='store_true', help='Whether to not run accelerate config')
     args = parser.parse_args()
