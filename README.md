@@ -7,12 +7,13 @@ The Cog-SDXL-WEBUI serves as a WEBUI for the implementation of the [SDXL](https:
 ## How to Use
 
 ### Generating Images
+#### ComfyUI
 
-Run the following command:
+You can use of [ComfyUI](https://github.com/comfyanonymous/ComfyUI) with the following image for the node configuration:
 
-```bash
-cog predict -i prompt="a photo of TOK"
-```
+<img src="images/ComfyUI_00852_.png" alt="Comfy node image" width="400"/>
+
+Put the lora in the comfy lora folder. Them put the embeding.pti in the embedings folder and make use of them as shown in the comfy image above.
 
 ### Training the Model
 
