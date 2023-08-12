@@ -28,9 +28,10 @@ Follow this guide: [Windows Installation Guide](https://github.com/replicate/cog
 
 #### Steps:
 
-1. Download and install Docker Desktop.
+1. Download and install [Docker Desktop](https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe).
 2. Configure WSL2.
-3. Run the following commands:
+3. Install cuda drivers.
+4. Run the following commands:
 
 ```bash
 sudo curl -o /usr/local/bin/cog -L "https://github.com/replicate/cog/releases/latest/download/cog_$(uname -s)_$(uname -m)"
@@ -46,7 +47,8 @@ cd cog-sdxl-webui
 #### Steps:
 
 1. Install Docker.
-2. Run the following commands:
+2. Install cuda drivers.
+3. Run the following commands:
 
 ```bash
 sudo curl -o /usr/local/bin/cog -L "https://github.com/replicate/cog/releases/latest/download/cog_$(uname -s)_$(uname -m)"
