@@ -115,6 +115,10 @@ def train(
         description="Number of steps between saving checkpoints. Set to very very high number to disable checkpointing, because you don't need one.",
         default=999999,
     ),
+    pivot_ratio: float = Input(
+        description="When should training should pivot from TI to LoRA/ Default is midway (0.5)",
+        default=0.5,
+    ),
 ) -> TrainingOutput:
     # Hard-code token_map for now. Make it configurable once we support multiple concepts or user-uploaded caption csv.
     token_map = token_string + ":2"
@@ -178,6 +182,7 @@ def train(
         device="cuda:0",
         lora_rank=lora_rank,
         is_lora=is_lora,
+        pivot_ratio=pivot_ratio,
     )
 
     directory = Path(OUTPUT_DIR)

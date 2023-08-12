@@ -360,6 +360,24 @@ class TokenEmbeddingsHandler:
             tensors[f"text_encoders_{idx}"] = new_token_embeddings
 
         save_file(tensors, file_path)
+        
+    def save_embeddings_safetensors(self, file_path: str):
+        assert (
+            self.train_ids is not None
+        ), "Initialize new tokens before saving embeddings."
+        tensors = {}
+        for idx, text_encoder in enumerate(self.text_encoders):
+            assert text_encoder.text_model.embeddings.token_embedding.weight.data.shape[
+                0
+            ] == len(self.tokenizers[0]), "Tokenizers should be the same."
+            new_token_embeddings = (
+                text_encoder.text_model.embeddings.token_embedding.weight.data[
+                    self.train_ids
+                ]
+            )
+            tensors["clip_l" if idx == 0 else "clip_g"] = new_token_embeddings
+
+        save_file(tensors, file_path)
 
     @property
     def dtype(self):

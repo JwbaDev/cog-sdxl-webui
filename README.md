@@ -10,9 +10,9 @@ The Cog-SDXL-WEBUI serves as a WEBUI for the implementation of the [SDXL](https:
 
 You can use of [ComfyUI](https://github.com/comfyanonymous/ComfyUI) with the following image for the node configuration:
 
-<img src="images/ComfyUI_00852_.png" alt="Comfy node image" width="400"/>
+<img src="images/ComfyUI_00885_.png" alt="Comfy node image" width="400"/>
 
-Put the lora in the comfy lora folder. Then put the embeding.pti in the embedings folder and make use of them as shown in the comfy image above.
+Look in the training_out folder. Put the `lora.safetensors` file in the comfy lora folder and rename it to what you want. Then put the `embeddings.safetensors` file in the embedings folder, rename it to what you like. Udr them as found in the comfy image above.
 
 ### Training a quick Model
 

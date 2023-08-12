@@ -43,6 +43,7 @@ def save_configuration(
     mask_target_prompts,
     max_train_steps,
     num_train_epochs,
+    pivot_ratio,
     resolution,
     token_string,
     use_face_detection_instead,
@@ -102,6 +103,7 @@ def open_configuration(
     mask_target_prompts,
     max_train_steps,
     num_train_epochs,
+    pivot_ratio,
     resolution,
     token_string,
     use_face_detection_instead,
@@ -176,6 +178,7 @@ def train_model(
     mask_target_prompts,
     max_train_steps,
     num_train_epochs,
+    pivot_ratio,
     resolution,
     token_string,
     use_face_detection_instead,
@@ -227,6 +230,7 @@ def train_model(
         run_cmd += f' -i "mask_target_prompts={mask_target_prompts}"'
     run_cmd += f' -i max_train_steps={max_train_steps}'
     run_cmd += f' -i num_train_epochs={num_train_epochs}'
+    run_cmd += f' -i pivot_ratio={pivot_ratio}'
     run_cmd += f' -i resolution={resolution}'
     run_cmd += f' -i "token_string={token_string}"'
     run_cmd += f' -i "input_images=@{input_images}"'
@@ -326,6 +330,11 @@ def lora_tab(
                     label='Train batch size', value=4,
                     info='Batch size (per device) for training',
                     minimum=1, step=1, maximum=64
+                )
+                pivot_ratio = gr.Slider(
+                    label='Training pivot ratio', value=0.5,
+                    info='When should training pivot away from TI. The smaller the number the quicker it will pivot.',
+                    minimum=0, step=0.01, maximum=1
                 )
             with gr.Row():
                 num_train_epochs = gr.Number(
@@ -447,6 +456,7 @@ def lora_tab(
             mask_target_prompts,
             max_train_steps,
             num_train_epochs,
+            pivot_ratio,
             resolution,
             token_string,
             use_face_detection_instead,

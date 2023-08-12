@@ -58,6 +58,7 @@ def main(
     verbose: bool = True,
     is_lora: bool = True,
     lora_rank: int = 32,
+    pivot_ratio: float = 0.5,
 ) -> None:
     if allow_tf32:
         torch.backends.cuda.matmul.allow_tf32 = True
@@ -261,8 +262,8 @@ def main(
 
     for epoch in range(first_epoch, num_train_epochs):
         if pivot_halfway:
-            if epoch == num_train_epochs // 2:
-                print("# PTI :  Pivot halfway")
+            if epoch == math.ceil(num_train_epochs * pivot_ratio):
+                print("# PTI :  Pivot training to LoRA")
                 # remove text encoder parameters from optimizer
                 params_to_optimize = params_to_optimize[:1]
                 optimizer = torch.optim.AdamW(
@@ -392,6 +393,10 @@ def main(
 
     embedding_handler.save_embeddings(
         f"{output_dir}/embeddings.pti",
+    )
+    
+    embedding_handler.save_embeddings_safetensors(
+        f"{output_dir}/embeddings.safetensors",
     )
 
     to_save = token_dict

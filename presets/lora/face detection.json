@@ -4,7 +4,6 @@
     "clipseg_temperature": 1,
     "crop_based_on_salience": false,
     "debug": false,
-    "input_images": "",
     "is_lora": true,
     "lora_lr": 0.0001,
     "lora_rank": 32,
