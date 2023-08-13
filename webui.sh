@@ -34,5 +34,5 @@ REQUIREMENTS_FILE="$SCRIPT_DIR/requirements.txt"
 
 # Validate the requirements and run the script if successful
 if python "$SCRIPT_DIR/setup/validate_requirements.py" -r "$REQUIREMENTS_FILE"; then
-    python "$SCRIPT_DIR/webui/webui.py" "$@"
+    python "$SCRIPT_DIR/webui.py" "$@"
 fi

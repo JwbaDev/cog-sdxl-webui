@@ -13,6 +13,7 @@ from library.common_gui import (
 from library.class_configuration_file import ConfigurationFile
 from library.class_command_executor import CommandExecutor
 from library.custom_logging import setup_logging
+from train import train
 
 # Set up logging
 log = setup_logging()
@@ -209,88 +210,84 @@ def train_model(
         )
         return
     
-    train(
-        pretrained_model_name_or_path=SDXL_MODEL_CACHE,
-        instance_data_dir=os.path.join(input_dir, "captions.csv"),
-        output_dir=OUTPUT_DIR,
-        seed=seed,
-        resolution=resolution,
-        train_batch_size=train_batch_size,
-        num_train_epochs=num_train_epochs,
-        max_train_steps=max_train_steps,
-        gradient_accumulation_steps=1,
-        unet_learning_rate=unet_learning_rate,
-        ti_lr=ti_lr,
-        lora_lr=lora_lr,
-        lr_scheduler=lr_scheduler,
-        lr_warmup_steps=lr_warmup_steps,
-        token_dict=token_dict,
-        inserting_list_tokens=all_token_lists,
-        verbose=verbose,
-        checkpointing_steps=checkpointing_steps,
-        scale_lr=False,
-        max_grad_norm=1.0,
-        allow_tf32=True,
-        mixed_precision="bf16",
-        device="cuda:0",
-        lora_rank=lora_rank,
-        is_lora=is_lora,
-        pivot_ratio=pivot_ratio,
-    )
+    # train(
+    #     caption_prefix=caption_prefix,
+    #     checkpointing_steps=checkpointing_steps,
+    #     clipseg_temperature=clipseg_temperature,
+    #     crop_based_on_salience=crop_based_on_salience,
+    #     input_images=input_images,
+    #     is_lora=is_lora,
+    #     lora_lr=lora_lr,
+    #     lora_rank=lora_rank,
+    #     lr_scheduler=lr_scheduler,
+    #     lr_warmup_steps=lr_warmup_steps,
+    #     mask_target_prompts=mask_target_prompts,
+    #     max_train_steps=max_train_steps,
+    #     num_train_epochs=num_train_epochs,
+    #     pivot_ratio=pivot_ratio,
+    #     resolution=resolution,
+    #     token_string=token_string,
+    #     use_face_detection_instead=use_face_detection_instead,
+    #     seed=seed,
+    #     ti_lr=ti_lr,
+    #     train_batch_size=train_batch_size,
+    #     unet_learning_rate=unet_learning_rate,
+    #     verbose=verbose,
+    # )
 
-    # run_cmd = f'cog train'
-    # run_cmd += f' -i caption_prefix="{caption_prefix}"'
-    # run_cmd += f' -i checkpointing_steps={checkpointing_steps}'
-    # run_cmd += f' -i clipseg_temperature={clipseg_temperature}'
-    # if crop_based_on_salience:
-    #     run_cmd += f' -i crop_based_on_salience=True'
-    # else: 
-    #     run_cmd += f' -i crop_based_on_salience=False'
+    run_cmd = f'python train_cli.py'
+    run_cmd += f' --caption_prefix="{caption_prefix}"'
+    run_cmd += f' --checkpointing_steps={checkpointing_steps}'
+    run_cmd += f' --clipseg_temperature={clipseg_temperature}'
+    if crop_based_on_salience:
+        run_cmd += f' --crop_based_on_salience=True'
+    else: 
+        run_cmd += f' --crop_based_on_salience=False'
     
-    # if is_lora:
-    #     run_cmd += f' -i is_lora=True'
-    # else: 
-    #     run_cmd += f' -i is_lora=False'
-    # run_cmd += f' -i clipseg_temperature={clipseg_temperature}'
-    # run_cmd += f' -i lora_lr={lora_lr}'
-    # run_cmd += f' -i lora_rank={lora_rank}'
-    # run_cmd += f' -i lr_scheduler={lr_scheduler}'
-    # run_cmd += f' -i lr_warmup_steps={lr_warmup_steps}'
-    # if not mask_target_prompts == '':
-    #     run_cmd += f' -i mask_target_prompts="{mask_target_prompts}"'
-    # run_cmd += f' -i max_train_steps={max_train_steps}'
-    # run_cmd += f' -i num_train_epochs={num_train_epochs}'
-    # run_cmd += f' -i pivot_ratio={pivot_ratio}'
-    # run_cmd += f' -i resolution={resolution}'
-    # run_cmd += f' -i token_string="{token_string}"'
-    # run_cmd += f' -i input_images="@{input_images}"'
-    # if use_face_detection_instead:
-    #     run_cmd += f' -i use_face_detection_instead=True'
-    # else:
-    #     run_cmd += f' -i use_face_detection_instead=False'
-    # run_cmd += f' -i seed={seed}'
-    # run_cmd += f' -i ti_lr={ti_lr}'
-    # run_cmd += f' -i train_batch_size={train_batch_size}'
-    # run_cmd += f' -i unet_learning_rate={unet_learning_rate}'
-    # if verbose:
-    #     run_cmd += f' -i verbose=True'
-    # else:
-    #     run_cmd += f' -i verbose=False'
-    # if debug:
-    #     run_cmd += f' --debug'
+    if is_lora:
+        run_cmd += f' --is_lora=True'
+    else: 
+        run_cmd += f' --is_lora=False'
+    run_cmd += f' --clipseg_temperature={clipseg_temperature}'
+    run_cmd += f' --lora_lr={lora_lr}'
+    run_cmd += f' --lora_rank={lora_rank}'
+    run_cmd += f' --lr_scheduler={lr_scheduler}'
+    run_cmd += f' --lr_warmup_steps={lr_warmup_steps}'
+    if not mask_target_prompts == '':
+        run_cmd += f' --mask_target_prompts="{mask_target_prompts}"'
+    run_cmd += f' --max_train_steps={max_train_steps}'
+    run_cmd += f' --num_train_epochs={num_train_epochs}'
+    run_cmd += f' --pivot_ratio={pivot_ratio}'
+    run_cmd += f' --resolution={resolution}'
+    run_cmd += f' --token_string="{token_string}"'
+    run_cmd += f' --input_images="{input_images}"'
+    if use_face_detection_instead:
+        run_cmd += f' --use_face_detection_instead=True'
+    else:
+        run_cmd += f' --use_face_detection_instead=False'
+    run_cmd += f' --seed={seed}'
+    run_cmd += f' --ti_lr={ti_lr}'
+    run_cmd += f' --train_batch_size={train_batch_size}'
+    run_cmd += f' --unet_learning_rate={unet_learning_rate}'
+    if verbose:
+        run_cmd += f' --verbose=True'
+    else:
+        run_cmd += f' --verbose=False'
+    if debug:
+        run_cmd += f' --debug'
     
 
-    # if print_only_bool:
-    #     log.warning(
-    #         'Here is the trainer command as a reference. It will not be executed:\n'
-    #     )
-    #     print(run_cmd)
+    if print_only_bool:
+        log.warning(
+            'Here is the trainer command as a reference. It will not be executed:\n'
+        )
+        print(run_cmd)
         
-    #     save_to_file(run_cmd)
-    # else:
-    #     log.info(run_cmd)
-    #     # Run the command
-    #     executor.execute_command(run_cmd=run_cmd)
+        save_to_file(run_cmd)
+    else:
+        log.info(run_cmd)
+        # Run the command
+        executor.execute_command(run_cmd=run_cmd)
 
 
 def lora_tab(
@@ -602,13 +599,14 @@ def UI(**kwargs):
             log.info(launch_kwargs)
             interface.launch(**launch_kwargs)
     except KeyboardInterrupt:
-        # Code to execute when Ctrl+C is pressed
-        print("You pressed Ctrl+C, stopping training!")
-        executor.kill_command
-        user_input = input("Do you want to quit? (yes/no, default is yes): ").strip().lower()
-        if user_input == 'yes' or user_input == '':
-            print("Exiting the program.")
-            exit()
+        exit
+        # # Code to execute when Ctrl+C is pressed
+        # print("You pressed Ctrl+C, stopping training!")
+        # executor.kill_command
+        # user_input = input("Do you want to quit? (yes/no, default is yes): ").strip().lower()
+        # if user_input == 'yes' or user_input == '':
+        #     print("Exiting the program.")
+        #     exit()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
