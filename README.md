@@ -22,7 +22,34 @@ Look in the training_out folder. Put the `lora.safetensors` file in the comfy lo
 
 ## Installation Guide
 
-### Windows
+### Windows11 Native
+#### Windows Pre-requirements
+
+To install the necessary dependencies on a Windows system, follow these steps:
+
+1. Install [Python 3.10](https://www.python.org/ftp/python/3.10.9/python-3.10.9-amd64.exe).
+   - During the installation process, ensure that you select the option to add Python to the 'PATH' environment variable.
+
+2. Install [Git](https://git-scm.com/download/win).
+
+3. Install the [Visual Studio 2015, 2017, 2019, and 2022 redistributable](https://aka.ms/vs/17/release/vc_redist.x64.exe).
+   
+4. Install cuda toolkit 11.8.0
+
+#### Steps:
+
+1. Install cuda toolkit 11.8.0
+2. Run ./setup.bat
+3. Run the following commands in windows terminal:
+
+```powershell
+git clone https://github.com/bmaltais/cog-sdxl-webui.git
+cd cog-sdxl-webui
+.\setup.bat
+.\webui.bat
+```
+
+### Windows WSL2
 
 #### Steps:
 
@@ -30,20 +57,11 @@ Look in the training_out folder. Put the `lora.safetensors` file in the comfy lo
 2. Run the following commands in WSL 2:
 
 ```bash
-sudo curl -o /usr/local/bin/cog -L "https://github.com/replicate/cog/releases/latest/download/cog_$(uname -s)_$(uname -m)"
-sudo chmod +x /usr/local/bin/cog
 git clone https://github.com/bmaltais/cog-sdxl-webui.git
 cd cog-sdxl-webui
-cog run ls
-```
-
-This last command will start the docker image build process. This can take a long time. Be patient.
-
-Finally, run the following command:
-
-```bash
 sudo apt update -y && sudo apt install -y python3-tk 
 ./setup.sh
+./webui.sh
 ```
 
 ### Linux
@@ -58,28 +76,11 @@ Make sure to use Ubuntu 22.04 or adapt the installation to your distro
 3. Run the following commands:
 
 ```bash
-sudo curl -o /usr/local/bin/cog -L "https://github.com/replicate/cog/releases/latest/download/cog_$(uname -s)_$(uname -m)"
-sudo chmod +x /usr/local/bin/cog
 git clone https://github.com/bmaltais/cog-sdxl-webui.git
 cd cog-sdxl-webui
-cog run ls
-```
-
-This last command will start the docker image build process. This can take a long time. Be patient.
-
-Finally, run the following command:
-
-```bash
 sudo apt update -y && sudo apt install -y python3-tk 
 ./setup.sh
-```
-
-## Running the Cog WEBUI
-
-To launch the webui, execute:
-
-```bash
-./webui.sh --inbrowser
+./webui.sh
 ```
 
 ## Training With Your Dataset
@@ -91,6 +92,9 @@ To launch the webui, execute:
 
 ## Update Notes
 
+### 2023-08-13
+- Convert to run without docker... much easier overall
+- 
 ### 2023-08-11
 - Initial release of Minimum Viable Product for training WEBUI.
 

@@ -1,8 +1,9 @@
 import os
 import shutil
 import tarfile
+from pathlib import Path
 
-from cog import BaseModel, Input, Path
+from cog import BaseModel, Input
 
 from predict import SDXL_MODEL_CACHE, SDXL_URL, download_weights
 from preprocess import preprocess
@@ -11,7 +12,7 @@ from trainer_pti import main
 """
 Wrapper around actual trainer.
 """
-OUTPUT_DIR = "training_out"
+OUTPUT_DIR = "training_out2"
 
 
 class TrainingOutput(BaseModel):

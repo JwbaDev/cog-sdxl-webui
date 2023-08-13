@@ -4,6 +4,7 @@ import re
 import shutil
 import subprocess
 import time
+import platform
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
@@ -64,7 +65,7 @@ def download_weights(url, dest):
     print("downloading to: ", dest)
     
     if platform.system() == 'Windows':
-        pget_command = ".\utils\pget.exe"
+        pget_command = ".\\utils\\pget.exe"
     else:
         pget_command = "./utils/pget"
 
