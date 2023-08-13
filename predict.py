@@ -62,7 +62,14 @@ def download_weights(url, dest):
     start = time.time()
     print("downloading url: ", url)
     print("downloading to: ", dest)
-    subprocess.check_output(["pget", "-x", url, dest])
+    
+    if platform.system() == 'Windows':
+        pget_command = ".\utils\pget.exe"
+    else:
+        pget_command = "./utils/pget"
+
+    subprocess.check_output([pget_command, "-x", url, dest])
+    
     print("downloading took: ", time.time() - start)
 
 
