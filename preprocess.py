@@ -496,7 +496,7 @@ def load_and_save_masks_and_captions(
 
     print(f"Upscaling {len(images)} images...")
     # upscale images anyways
-    # images = swin_ir_sr(images, target_size=(target_size, target_size))
+    images = swin_ir_sr(images, target_size=(target_size, target_size))
     
     # Upscale only images that are smaller than the target size
     # images = [

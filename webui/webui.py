@@ -209,7 +209,7 @@ def train_model(
         return
 
     run_cmd = f'cog train'
-    run_cmd += f' -i "caption_prefix={caption_prefix}"'
+    run_cmd += f' -i caption_prefix="{caption_prefix}"'
     run_cmd += f' -i checkpointing_steps={checkpointing_steps}'
     run_cmd += f' -i clipseg_temperature={clipseg_temperature}'
     if crop_based_on_salience:
@@ -227,13 +227,13 @@ def train_model(
     run_cmd += f' -i lr_scheduler={lr_scheduler}'
     run_cmd += f' -i lr_warmup_steps={lr_warmup_steps}'
     if not mask_target_prompts == '':
-        run_cmd += f' -i "mask_target_prompts={mask_target_prompts}"'
+        run_cmd += f' -i mask_target_prompts="{mask_target_prompts}"'
     run_cmd += f' -i max_train_steps={max_train_steps}'
     run_cmd += f' -i num_train_epochs={num_train_epochs}'
     run_cmd += f' -i pivot_ratio={pivot_ratio}'
     run_cmd += f' -i resolution={resolution}'
-    run_cmd += f' -i "token_string={token_string}"'
-    run_cmd += f' -i "input_images=@{input_images}"'
+    run_cmd += f' -i token_string="{token_string}"'
+    run_cmd += f' -i input_images="@{input_images}"'
     if use_face_detection_instead:
         run_cmd += f' -i use_face_detection_instead=True'
     else:
