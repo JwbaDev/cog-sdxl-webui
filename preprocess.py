@@ -28,6 +28,10 @@ from transformers import (
     Swin2SRForImageSuperResolution,
     Swin2SRImageProcessor,
 )
+from library.custom_logging import setup_logging
+
+# Set up logging
+log = setup_logging()
 
 MODEL_PATH = "./cache"
 TEMP_OUT_DIR = "./temp/"
@@ -128,10 +132,13 @@ def swin_ir_sr(
     for image in tqdm(images):
         ori_w, ori_h = image.size
         if target_size is not None:
-            if ori_w >= target_size[0] and ori_h >= target_size[1]:
+            # upscale only if width or height of image is smaller than target size
+            log.debug(f'Image width: {ori_w}, Image height: {ori_h}, Target width: {target_size[0]}, Target height: {target_size[1]}' )
+            if ori_w >= target_size[0] or ori_h >= target_size[1]:
                 out_images.append(image)
                 continue
 
+        log.info('Resizing...')
         inputs = processor(image, return_tensors="pt").to(device)
         with torch.no_grad():
             outputs = model(**inputs)
@@ -166,7 +173,7 @@ def clipseg_mask_generator(
     """
 
     if isinstance(target_prompts, str):
-        print(
+        log.info(
             f'Warning: only one target prompt "{target_prompts}" was given, so it will be used for all images'
         )
 
@@ -228,7 +235,7 @@ def blip_captioning_dataset(
         model_id, cache_dir=MODEL_PATH
     ).to(device)
     captions = []
-    print(f"Input captioning text: {text}")
+    log.debug(f"Input captioning text: {text}")
     for image in tqdm(images):
         inputs = processor(image, text=text, return_tensors="pt").to("cuda")
         out = model.generate(
@@ -238,14 +245,15 @@ def blip_captioning_dataset(
 
         # BLIP 2 lowercases all caps tokens. This should properly replace them w/o messing up subwords. I'm sure there's a better way to do this.
         for token in substitution_tokens:
-            print(token)
+            log.debug(token)
             sub_cap = " " + caption + " "
-            print(sub_cap)
+            log.debug(sub_cap)
             sub_cap = sub_cap.replace(" " + token.lower() + " ", " " + token + " ")
             caption = sub_cap.strip()
 
         captions.append(caption)
-    print("Generated captions", captions)
+    for caption in captions:
+        log.info(f"Generated caption: {str(caption)}")
     return captions
 
 
@@ -365,7 +373,7 @@ def face_mask_google_mediapipe(
                     masks.append(Image.new("L", (iw, ih), 0))
 
         else:
-            print("No face detected, adding full mask")
+            log.info("No face detected, adding full mask")
             # If no face is detected, add a white mask of the same size as the image
             masks.append(Image.new("L", (iw, ih), 255))
 
@@ -462,11 +470,11 @@ def load_and_save_masks_and_captions(
         if n_length == -1:
             n_length = len(files)
         files = sorted(files)[:n_length]
-        print(files)
+        log.debug(files)
     images = [Image.open(file).convert("RGB") for file in files]
 
     # captions
-    print(f"Generating {len(images)} captions...")
+    log.info(f"Generating {len(images)} captions...")
     captions = blip_captioning_dataset(
         images, text=caption_text, substitution_tokens=substitution_tokens
     )
@@ -475,7 +483,7 @@ def load_and_save_masks_and_captions(
         mask_target_prompts = ""
         temp = 999
 
-    print(f"Generating {len(images)} masks...")
+    log.info(f"Generating {len(images)} masks...")
     if not use_face_detection_instead:
         seg_masks = clipseg_mask_generator(
             images=images, target_prompts=mask_target_prompts, temp=temp
@@ -484,7 +492,7 @@ def load_and_save_masks_and_captions(
         seg_masks = face_mask_google_mediapipe(images=images)
 
     # find the center of mass of the mask
-    print(f"Find the center of mass of the mask...")
+    log.info(f"Find the center of mass of the mask...")
     if crop_based_on_salience:
         coms = [_center_of_mass(mask) for mask in seg_masks]
     else:
@@ -494,16 +502,11 @@ def load_and_save_masks_and_captions(
         _crop_to_square(image, com, resize_to=None) for image, com in zip(images, coms)
     ]
 
-    print(f"Upscaling {len(images)} images...")
+    log.info(f"Upscaling {len(images)} images...")
     # upscale images anyways
     images = swin_ir_sr(images, target_size=(target_size, target_size))
     
-    # Upscale only images that are smaller than the target size
-    # images = [
-    #     swin_ir_sr(image, target_size=(target_size, target_size)) if image.size[0] < target_size or image.size[1] < target_size else image
-    #     for image in images
-    # ]
-    
+    # Is this needed? Should all images not already be the right size?
     images = [
         image.resize((target_size, target_size), Image.Resampling.LANCZOS)
         for image in images
