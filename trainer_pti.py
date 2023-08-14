@@ -28,7 +28,9 @@ def main(
     ] = "./cache",  # "stabilityai/stable-diffusion-xl-base-1.0",
     revision: Optional[str] = None,
     instance_data_dir: Optional[str] = "./dataset/zeke/captions.csv",
-    output_dir: str = "ft_masked_coke",
+    output_lora_dir: str = "./training_out",
+    output_embedding_dir: str = "./training_out",
+    output_name: str = "last",
     seed: Optional[int] = 42,
     resolution: int = 512,
     crops_coords_top_left_h: int = 0,
@@ -357,7 +359,7 @@ def main(
                     }
                     save_file(
                         tensors,
-                        f"{checkpoint_dir}/unet/checkpoint-{global_step}.unet.safetensors",
+                        f"{output_lora_dir}/{output_name}-unet-{global_step}.safetensors",
                     )
 
                 else:
@@ -365,11 +367,11 @@ def main(
 
                     save_file(
                         lora_tensors,
-                        f"{checkpoint_dir}/unet/checkpoint-{global_step}.lora.safetensors",
+                        f"{output_lora_dir}/{output_name}-{global_step}.lora.safetensors",
                     )
 
-                embedding_handler.save_embeddings(
-                    f"{checkpoint_dir}/embeddings/checkpoint-{global_step}.pti",
+                embedding_handler.save_embeddings_safetensors(
+                    f"{output_embedding_dir}/{output_name}-{global_step}.safetensors",
                 )
 
     # final_save
@@ -382,26 +384,26 @@ def main(
         }
         save_file(
             tensors,
-            f"{output_dir}/unet.safetensors",
+            f"{output_lora_dir}/{output_name}-unet.safetensors",
         )
     else:
         lora_tensors = unet_attn_processors_state_dict(unet)
         save_file(
             lora_tensors,
-            f"{output_dir}/lora.safetensors",
+            f"{output_lora_dir}/{output_name}-lora.safetensors",
         )
 
-    embedding_handler.save_embeddings(
-        f"{output_dir}/embeddings.pti",
-    )
+    # embedding_handler.save_embeddings(
+    #     f"{output_embedding_dir}/embeddings.pti",
+    # )
     
     embedding_handler.save_embeddings_safetensors(
-        f"{output_dir}/embeddings.safetensors",
+        f"{output_embedding_dir}/{output_name}-embeddings.safetensors",
     )
 
-    to_save = token_dict
-    with open(f"{output_dir}/special_params.json", "w") as f:
-        json.dump(to_save, f)
+    # to_save = token_dict
+    # with open(f"{output_lora_dir}/special_params.json", "w") as f:
+    #     json.dump(to_save, f)
 
 
 if __name__ == "__main__":

@@ -20,4 +20,4 @@ rich
 safetensors
 # tensorrt
 # for kohya_ss library
-. # no_verify leave this to specify not checking this a verification stage
+-e . # no_verify leave this to specify not checking this a verification stage

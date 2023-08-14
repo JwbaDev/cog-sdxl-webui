@@ -12,6 +12,7 @@ from library.common_gui import (
 )
 from library.class_configuration_file import ConfigurationFile
 from library.class_command_executor import CommandExecutor
+from library.class_folders import Folders
 from library.custom_logging import setup_logging
 # from train import train
 
@@ -44,6 +45,9 @@ def save_configuration(
     mask_target_prompts,
     max_train_steps,
     num_train_epochs,
+    output_embedding_dir,
+    output_lora_dir,
+    output_name,
     pivot_ratio,
     resolution,
     token_string,
@@ -104,6 +108,9 @@ def open_configuration(
     mask_target_prompts,
     max_train_steps,
     num_train_epochs,
+    output_embedding_dir,
+    output_lora_dir,
+    output_name,
     pivot_ratio,
     resolution,
     token_string,
@@ -179,6 +186,9 @@ def train_model(
     mask_target_prompts,
     max_train_steps,
     num_train_epochs,
+    output_embedding_dir,
+    output_lora_dir,
+    output_name,
     pivot_ratio,
     resolution,
     token_string,
@@ -257,6 +267,9 @@ def train_model(
         run_cmd += f' --mask_target_prompts="{mask_target_prompts}"'
     run_cmd += f' --max_train_steps={max_train_steps}'
     run_cmd += f' --num_train_epochs={num_train_epochs}'
+    run_cmd += f' --output_name={output_name}'
+    run_cmd += f' --output_lora_dir={output_lora_dir}'
+    run_cmd += f' --output_embedding_dir={output_embedding_dir}'
     run_cmd += f' --pivot_ratio={pivot_ratio}'
     run_cmd += f' --resolution={resolution}'
     run_cmd += f' --token_string="{token_string}"'
@@ -297,28 +310,17 @@ def lora_tab(
     dummy_db_false = gr.Label(value=False, visible=False)
     dummy_headless = gr.Label(value=headless, visible=False)
 
+    # Setup Configuration Files Gradio
+    config = ConfigurationFile(headless=headless)
+
+    with gr.Tab('Files & Folders'):
+        folders = Folders(headless=headless)
+    
     with gr.Tab('Training'):
         gr.Markdown(
             'Train a custom model using cog trainer LoRA python code...'
         )
         
-        # Setup Configuration Files Gradio
-        config = ConfigurationFile(headless)
-
-        with gr.Row():
-            input_images = gr.Textbox(
-                label='Image zip file',
-                placeholder='Path to zip file where the training images are located',
-            )
-            input_images_folder = gr.Button(
-                '📂', elem_id='open_folder_small', visible=(not headless)
-            )
-            input_images_folder.click(
-                get_file_path,
-                outputs=input_images,
-                show_progress=False,
-            )
-            
         with gr.Tab('Parameters'):
             def list_presets(path):
                 json_files = []
@@ -474,7 +476,7 @@ def lora_tab(
             clipseg_temperature,
             crop_based_on_salience,
             debug,
-            input_images,
+            folders.input_images,
             is_lora,
             lora_lr,
             lora_rank,
@@ -483,6 +485,9 @@ def lora_tab(
             mask_target_prompts,
             max_train_steps,
             num_train_epochs,
+            folders.output_embedding_dir,
+            folders.output_lora_dir,
+            folders.output_name,
             pivot_ratio,
             resolution,
             token_string,

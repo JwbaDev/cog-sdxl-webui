@@ -124,6 +124,18 @@ def train(
         default="infer",
         choices=["zip", "tar", "infer"],
     ),
+    output_lora_dir: str = Input(
+        description="Path to LoRA output directory",
+        default="./training_out",
+    ),  
+    output_embedding_dir: str = Input(
+        description="Path to LoRA output directory",
+        default="./training_out",
+    ),
+    output_name: str = Input(
+        description="Name of the model",
+        default="last",
+    ),
 ) -> TrainingOutput:
     # Hard-code token_map for now. Make it configurable once we support multiple concepts or user-uploaded caption csv.
     token_map = token_string + ":2"
@@ -158,14 +170,17 @@ def train(
 
     if not os.path.exists(SDXL_MODEL_CACHE):
         download_weights(SDXL_URL, SDXL_MODEL_CACHE)
-    if os.path.exists(OUTPUT_DIR):
-        shutil.rmtree(OUTPUT_DIR)
-    os.makedirs(OUTPUT_DIR)
+    if not os.path.exists(output_lora_dir):
+        os.makedirs(output_lora_dir)
+    if not os.path.exists(output_embedding_dir):
+        os.makedirs(output_embedding_dir)
 
     main(
         pretrained_model_name_or_path=SDXL_MODEL_CACHE,
         instance_data_dir=os.path.join(input_dir, "captions.csv"),
-        output_dir=OUTPUT_DIR,
+        output_lora_dir=output_lora_dir,
+        output_embedding_dir=output_embedding_dir,
+        output_name=output_name,
         seed=seed,
         resolution=resolution,
         train_batch_size=train_batch_size,
@@ -191,13 +206,13 @@ def train(
         pivot_ratio=pivot_ratio,
     )
 
-    directory = Path(OUTPUT_DIR)
+    directory = Path(output_lora_dir)
     out_path = "trained_model.tar"
 
-    with tarfile.open(out_path, "w") as tar:
-        for file_path in directory.rglob("*"):
-            print(file_path)
-            arcname = file_path.relative_to(directory)
-            tar.add(file_path, arcname=arcname)
+    # with tarfile.open(out_path, "w") as tar:
+    #     for file_path in directory.rglob("*"):
+    #         print(file_path)
+    #         arcname = file_path.relative_to(directory)
+    #         tar.add(file_path, arcname=arcname)
 
     return TrainingOutput(weights=Path(out_path))
