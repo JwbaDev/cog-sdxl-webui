@@ -398,7 +398,7 @@ def main(
     # )
     
     embedding_handler.save_embeddings_safetensors(
-        f"{output_embedding_dir}/{output_name}-embeddings.safetensors",
+        f"{output_embedding_dir}/{output_name}.safetensors",
     )
 
     # to_save = token_dict

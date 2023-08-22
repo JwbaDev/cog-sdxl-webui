@@ -250,14 +250,10 @@ def train_model(
     run_cmd += f' --checkpointing_steps={checkpointing_steps}'
     run_cmd += f' --clipseg_temperature={clipseg_temperature}'
     if crop_based_on_salience:
-        run_cmd += f' --crop_based_on_salience=True'
-    else: 
-        run_cmd += f' --crop_based_on_salience=False'
+        run_cmd += f' --crop_based_on_salience'
     
     if is_lora:
-        run_cmd += f' --is_lora=True'
-    else: 
-        run_cmd += f' --is_lora=False'
+        run_cmd += f' --is_lora'
     run_cmd += f' --clipseg_temperature={clipseg_temperature}'
     run_cmd += f' --lora_lr={lora_lr}'
     run_cmd += f' --lora_rank={lora_rank}'
@@ -267,25 +263,21 @@ def train_model(
         run_cmd += f' --mask_target_prompts="{mask_target_prompts}"'
     run_cmd += f' --max_train_steps={max_train_steps}'
     run_cmd += f' --num_train_epochs={num_train_epochs}'
-    run_cmd += f' --output_name={output_name}'
-    run_cmd += f' --output_lora_dir={output_lora_dir}'
-    run_cmd += f' --output_embedding_dir={output_embedding_dir}'
+    run_cmd += f' --output_name="{output_name}"'
+    run_cmd += f' --output_lora_dir="{output_lora_dir}"'
+    run_cmd += f' --output_embedding_dir="{output_embedding_dir}"'
     run_cmd += f' --pivot_ratio={pivot_ratio}'
     run_cmd += f' --resolution={resolution}'
     run_cmd += f' --token_string="{token_string}"'
     run_cmd += f' --input_images="{input_images}"'
     if use_face_detection_instead:
-        run_cmd += f' --use_face_detection_instead=True'
-    else:
-        run_cmd += f' --use_face_detection_instead=False'
+        run_cmd += f' --use_face_detection_instead'
     run_cmd += f' --seed={seed}'
     run_cmd += f' --ti_lr={ti_lr}'
     run_cmd += f' --train_batch_size={train_batch_size}'
     run_cmd += f' --unet_learning_rate={unet_learning_rate}'
     if verbose:
-        run_cmd += f' --verbose=True'
-    else:
-        run_cmd += f' --verbose=False'
+        run_cmd += f' --verbose'
     if debug:
         run_cmd += f' --debug'
     
@@ -312,6 +304,13 @@ def lora_tab(
 
     # Setup Configuration Files Gradio
     config = ConfigurationFile(headless=headless)
+    
+    with gr.Row():
+        button_run = gr.Button('Start training', variant='primary')
+        
+        button_stop_training = gr.Button('Stop training')
+
+    button_print = gr.Button('Print training command')
 
     with gr.Tab('Files & Folders'):
         folders = Folders(headless=headless)
@@ -351,7 +350,7 @@ def lora_tab(
                     minimum=0, precision=0,
                 )
                 resolution = gr.Number(
-                    label='Resolution', value=768,
+                    label='Resolution', value=1024,
                     info='Square pixel resolution which your images will be resized to for training',
                     minimum=128, precision=0,maximum=4096
                 )
@@ -463,12 +462,7 @@ def lora_tab(
                     value=False,
                     info='Get debut output while training.',
                 )
-        with gr.Row():
-            button_run = gr.Button('Start training', variant='primary')
-            
-            button_stop_training = gr.Button('Stop training')
-
-        button_print = gr.Button('Print training command')
+        
 
         settings_list = [
             caption_prefix,
@@ -576,11 +570,11 @@ def UI(**kwargs):
                     css += file.read() + '\n'
 
             interface = gr.Blocks(
-                css=css, title='Kohya_ss GUI', theme=gr.themes.Default()
+                css=css, title='cog sdxl webui', theme=gr.themes.Default()
             )
 
             with interface:
-                with gr.Tab('COG LoRA Trainer'):
+                with gr.Tab('COG SDXL Trainer'):
                     lora_tab(headless=headless)
 
             # Show the interface

@@ -7,10 +7,10 @@ def main():
     parser.add_argument("--caption_prefix", type=str, default="a photo of TOK, ", help="Text which will be used as prefix during automatic captioning. Must contain the `token_string`.")
     parser.add_argument("--checkpointing_steps", type=int, default=999999, help="Number of steps between saving checkpoints. Set to very very high number to disable checkpointing, because you don't need one.")
     parser.add_argument("--clipseg_temperature", type=float, default=1.0, help="How blurry you want the CLIPSeg mask to be. We recommend this value be something between `0.5` to `1.0`. If you want to have more sharp mask (but thus more errorful), you can decrease this value.")
-    parser.add_argument("--crop_based_on_salience", type=bool, default=True, help="If you want to crop the image to `target_size` based on the important parts of the image, set this to True. If you want to crop the image based on face detection, set this to False")
+    parser.add_argument("--crop_based_on_salience", action="store_true", help="If you want to crop the image to `target_size` based on the important parts of the image, set this to True. If you want to crop the image based on face detection, set this to False")
     parser.add_argument("--input_images", required=True, type=str, help="A .zip or .tar file containing the image files that will be used for fine-tuning")
     parser.add_argument("--input_images_filetype", type=str, choices=["zip", "tar", "infer"], default="infer", help="Filetype of the input images. Can be either `zip` or `tar`. By default its `infer`, and it will be inferred from the ext of input file.")
-    parser.add_argument("--is_lora", type=bool, default=True, help="Whether to use LoRA training. If set to False, will use Full fine tuning")
+    parser.add_argument("--is_lora", action="store_true", help="Whether to use LoRA training. If set to False, will use Full fine tuning")
     parser.add_argument("--lora_lr", type=float, default=1e-4, help="Scaling of learning rate for training LoRA embeddings. Don't alter unless you know what you're doing.")
     parser.add_argument("--lora_rank", type=int, default=32, help="Rank of LoRA embeddings. Don't alter unless you know what you're doing.")
     parser.add_argument("--lr_scheduler", type=str, choices=["constant", "linear"], default="constant", help="Learning rate scheduler to use for training")
@@ -28,8 +28,8 @@ def main():
     parser.add_argument("--token_string", type=str, default="TOK", help="A unique string that will be trained to refer to the concept in the input images. Can be anything, but TOK works well")
     parser.add_argument("--train_batch_size", type=int, default=4, help="Batch size (per device) for training")
     parser.add_argument("--unet_learning_rate", type=float, default=1e-6, help="Learning rate for the U-Net. We recommend this value to be somewhere between `1e-6` to `1e-5`.")
-    parser.add_argument("--use_face_detection_instead", type=bool, default=False, help="If you want to use face detection instead of CLIPSeg for masking. For face applications, we recommend using this option.")
-    parser.add_argument("--verbose", type=bool, default=True, help="Verbose output")
+    parser.add_argument("--use_face_detection_instead", action="store_true", help="If you want to use face detection instead of CLIPSeg for masking. For face applications, we recommend using this option.")
+    parser.add_argument("--verbose", action="store_true", help="Verbose output")
 
     args = parser.parse_args()
 

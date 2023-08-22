@@ -6,12 +6,6 @@ class Folders:
         self.headless = headless
         
         with gr.Row():
-            self.output_name = gr.Textbox(
-                label='Model output name',
-                placeholder='(Name of the model to output)',
-                value='last',
-                interactive=True,
-            )
             self.input_images = gr.Textbox(
                 label='Image zip file',
                 placeholder='Path to zip file where the training images are located',
@@ -23,6 +17,12 @@ class Folders:
                 get_file_path,
                 outputs=self.input_images,
                 show_progress=False,
+            )
+            self.output_name = gr.Textbox(
+                label='Model output name',
+                placeholder='(Name of the model to output)',
+                value='last',
+                interactive=True,
             )
             # self.reg_data_dir = gr.Textbox(
             #     label='Regularisation folder',

@@ -137,6 +137,7 @@ def train(
         default="last",
     ),
 ) -> TrainingOutput:
+    print(f'train.py Use face detection instead: {use_face_detection_instead}')
     # Hard-code token_map for now. Make it configurable once we support multiple concepts or user-uploaded caption csv.
     token_map = token_string + ":2"
 
