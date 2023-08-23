@@ -98,7 +98,12 @@ sudo apt update -y && sudo apt install -y python3-tk
 ### 2023-08-11
 - Initial release of Minimum Viable Product for training WEBUI.
 
-**2021-08-12**
+**2023-08-17**
+* ROI problem is fixed.
+* Now BLIP caption_prefix does not interfere with BLIP captioner.
+
+
+**2023-08-12**
 * Input types are inferred from input name extensions, or from the `input_images_filetype` argument
 * Preprocssing are now done with fp16, and if no mask is found, the model will use the whole image
 

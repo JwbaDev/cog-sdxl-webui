@@ -227,39 +227,34 @@ def blip_captioning_dataset(
     ] = "Salesforce/blip-image-captioning-large",
     device=torch.device("cuda" if torch.cuda.is_available() else "cpu"),
     substitution_tokens: Optional[List[str]] = None,
-    use_fixed_text: bool = True, # New parameter
     **kwargs,
 ) -> List[str]:
     """
     Returns a list of captions for the given images
     """
+    processor = BlipProcessor.from_pretrained(model_id, cache_dir=MODEL_PATH)
+    model = BlipForConditionalGeneration.from_pretrained(
+        model_id, cache_dir=MODEL_PATH
+    ).to(device)
     captions = []
-    if use_fixed_text and text is not None:
-        captions = [text] * len(images)
-    else:
-        processor = BlipProcessor.from_pretrained(model_id, cache_dir=MODEL_PATH)
-        model = BlipForConditionalGeneration.from_pretrained(
-            model_id, cache_dir=MODEL_PATH
-        ).to(device)
-        
-        log.debug(f"Input captioning text: {text}")
-        for image in tqdm(images):
-            inputs = processor(image, text=text, return_tensors="pt").to("cuda")
-            out = model.generate(
-                **inputs, max_length=150, do_sample=True, top_k=50, temperature=0.7
-            )
-            caption = processor.decode(out[0], skip_special_tokens=True)
+    text = text.strip()
+    log.debug(f"Input captioning text: {text}")
+    for image in tqdm(images):
+        inputs = processor(image, return_tensors="pt").to("cuda")
+        out = model.generate(
+            **inputs, max_length=150, do_sample=True, top_k=50, temperature=0.7
+        )
+        caption = processor.decode(out[0], skip_special_tokens=True)
 
-            # BLIP 2 lowercases all caps tokens. This should properly replace them w/o messing up subwords. I'm sure there's a better way to do this.
-            for token in substitution_tokens or []:
-                log.debug(token)
-                sub_cap = " " + caption + " "
-                log.debug(sub_cap)
-                sub_cap = sub_cap.replace(" " + token.lower() + " ", " " + token + " ")
-                caption = sub_cap.strip()
+        # BLIP 2 lowercases all caps tokens. This should properly replace them w/o messing up subwords. I'm sure there's a better way to do this.
+        for token in substitution_tokens:
+            log.debug(token)
+            sub_cap = " " + caption + " "
+            log.debug(sub_cap)
+            sub_cap = sub_cap.replace(" " + token.lower() + " ", " " + token + " ")
+            caption = sub_cap.strip()
 
-            captions.append(caption)
-
+        captions.append(text + " " + caption)
     for caption in captions:
         log.info(f"Generated caption: {str(caption)}")
     return captions
@@ -291,13 +286,23 @@ def face_mask_google_mediapipe(
         if results_detection.detections:
             for detection in results_detection.detections:
                 bboxC = detection.location_data.relative_bounding_box
-                
+
                 bbox = (
                     int(bboxC.xmin * iw),
                     int(bboxC.ymin * ih),
                     int(bboxC.width * iw),
                     int(bboxC.height * ih),
                 )
+
+                # make sure bbox is within image
+                bbox = (
+                    max(0, bbox[0]),
+                    max(0, bbox[1]),
+                    min(iw - bbox[0], bbox[2]),
+                    min(ih - bbox[1], bbox[3]),
+                )
+
+                print(bbox)
 
                 # Extract face landmarks
                 face_landmarks = face_mesh.process(
@@ -378,7 +383,7 @@ def face_mask_google_mediapipe(
                     masks.append(mask)
                 else:
                     # If face landmarks are not available, add a black mask of the same size as the image
-                    masks.append(Image.new("L", (iw, ih), 0))
+                    masks.append(Image.new("L", (iw, ih), 255))
 
         else:
             log.info("No face detected, adding full mask")

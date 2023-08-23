@@ -69,7 +69,7 @@ def download_weights(url, dest):
     else:
         pget_command = "./utils/pget"
 
-    subprocess.check_output([pget_command, "-x", url, dest])
+    subprocess.check_call([pget_command, "-x", url, dest])
     
     print("downloading took: ", time.time() - start)
 
@@ -346,6 +346,8 @@ class Predictor(BasePredictor):
             sdxl_kwargs["image"] = self.load_image(image)
             sdxl_kwargs["mask_image"] = self.load_image(mask)
             sdxl_kwargs["strength"] = prompt_strength
+            sdxl_kwargs["width"] = width
+            sdxl_kwargs["height"] = height
             pipe = self.inpaint_pipe
         elif image:
             print("img2img mode")
